@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://supportpilot.space/sitemap.xml
