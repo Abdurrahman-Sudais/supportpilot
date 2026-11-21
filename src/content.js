@@ -9,6 +9,8 @@ const site = {
   email: 'victor@supportpilot.space',
   team: [
     {name: 'Victor Adebayo', role: 'Founder', initials: 'VA', bio: 'Victor founded SupportPilot after watching support teams answer the same password and billing questions hundreds of times a week while complex cases waited. Victor leads product, customers and every pilot, with a focus on grounded answers and clear hand-offs to people.', focus: ['Product', 'Grounded support automation', 'Customer pilots']},
+    {name: "Yetunde Akande", role: "Co-founder", initials: "YA", bio: "Yetunde leads customer success at SupportPilot: onboarding support teams, shaping escalation rules with support managers and turning agent feedback into product changes.", focus: ["Customer experience", "Pilot onboarding", "Escalation design"]},
+    {name: "Kelechi Eze", role: "CTO", initials: "KE", bio: "Kelechi leads engineering: retrieval from approved knowledge, citations and confidence, ticket categorisation and routing, summaries and the AWS platform it runs on.", focus: ["Platform architecture", "Retrieval and NLP", "AWS infrastructure"]},
   ],
   app: {
     title: 'Support console',

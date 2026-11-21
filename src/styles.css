@@ -249,3 +249,51 @@ input[type=range] { width: 100%; accent-color: var(--tang); }
 }
 @media (hover: none) { .sp-cursor { display: none; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }
+
+/* ───── Flow (shared with every site): staggered fade-rise-sharpen on scroll, word entrance, cycling line,
+   count-ups and a marquee band. Colours come from each site's own variables via the --flow-* hooks. ───── */
+html.fx-flow [data-fx="wait"] { opacity: 0; transform: translateY(22px); filter: blur(6px); }
+html.fx-flow [data-fx="in"] { opacity: 1; transform: none; filter: none; transition: opacity .8s cubic-bezier(.22, 1, .36, 1) var(--fx-d, 0ms), transform .9s cubic-bezier(.22, 1, .36, 1) var(--fx-d, 0ms), filter .8s cubic-bezier(.22, 1, .36, 1) var(--fx-d, 0ms); }
+.fw { display: inline-block; }
+.fwi { display: inline; }
+html.fx-flow .fw { animation: fx-word .75s cubic-bezier(.22, 1, .36, 1) both; animation-delay: calc(var(--i) * 70ms + 80ms); }
+html.fx-flow .fwi { animation: fx-fade .9s cubic-bezier(.22, 1, .36, 1) both; animation-delay: calc(var(--i) * 70ms + 80ms); }
+@keyframes fx-word { from { opacity: 0; transform: translateY(.45em); filter: blur(5px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes fx-fade { from { opacity: 0; filter: blur(5px); } to { opacity: 1; filter: none; } }
+.fcycle { display: inline-flex; flex-wrap: wrap; gap: .35em; align-items: baseline; }
+.fcycle b { display: inline-block; color: var(--flow-accent, currentColor); }
+html.fx-flow .fcycle b { animation: fx-cycle .55s cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes fx-cycle { from { opacity: 0; transform: translateY(.6em); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+.fmq { position: relative; overflow: hidden; padding: 18px 0; border-block: 1px solid var(--flow-line, rgba(127, 127, 127, .25)); background: var(--flow-bg, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.fmq-track { display: flex; width: max-content; gap: 44px; padding-left: 44px; }
+html.fx-flow .fmq-track { animation: fx-mq 42s linear infinite; }
+.fmq:hover .fmq-track { animation-play-state: paused; }
+.fmq-track span { white-space: nowrap; display: inline-flex; align-items: center; gap: 44px; font: var(--flow-mq-font, 500 15px/1 inherit); color: var(--flow-mq-color, inherit); opacity: .85; }
+.fmq-track span::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--flow-accent, currentColor); opacity: .8; }
+@keyframes fx-mq { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+  html.fx-flow [data-fx] { opacity: 1 !important; transform: none !important; filter: none !important; }
+  .fw, .fwi, .fcycle b, .fmq-track { animation: none !important; }
+}
+.fstats-wrap { max-width: 1320px; margin: 0 auto; padding: clamp(36px, 5vw, 64px) clamp(16px, 4vw, 48px) 0; }
+.fstats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.fstats div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 8px; padding: 22px 20px; border: var(--flow-card-border, 1px solid rgba(127, 127, 127, .25)); border-radius: var(--flow-radius, 14px); background: var(--flow-card, transparent); }
+.fstats dd { font: var(--flow-num-font, 700 44px/1 inherit); letter-spacing: -.03em; color: var(--flow-num, inherit); font-variant-numeric: tabular-nums; }
+.fstats dt { font-size: 14.5px; line-height: 1.45; color: var(--flow-muted, inherit); opacity: .9; }
+.fstats-note { margin-top: 10px; font-size: 12.5px; color: var(--flow-muted, inherit); opacity: .8; }
+.fcy { margin-top: 18px; font-size: 16px; color: var(--flow-muted, inherit); }
+.team-head { margin-bottom: 34px; }
+.team-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.team-list > :first-child { grid-column: 1 / -1; }
+.team-list .team { margin: 0; }
+@media (max-width: 900px) { .fstats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .team-list { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 420px) { .fstats dd { font-size: 34px; } }
+
+/* flow tokens */
+:root { --flow-accent: var(--tang); --flow-line: var(--ink); --flow-bg: var(--sun); --flow-mq-font: 700 17px/1 var(--head); --flow-mq-color: var(--ink); --flow-card: var(--card); --flow-card-border: 2px solid var(--ink); --flow-radius: 22px 22px 22px 6px; --flow-num-font: 800 48px/1 var(--head); --flow-num: var(--ink); --flow-muted: var(--muted); }
+.team .tname { font-family: var(--head); font-weight: 700; font-size: clamp(26px, 2.8vw, 38px); line-height: 1.05; letter-spacing: -.02em; margin-top: 6px; }
+.team-list > :not(:first-child) { grid-template-columns: 96px minmax(0, 1fr); gap: 22px; max-width: none; }
+.team-list > :not(:first-child) .av { width: 96px; height: 96px; font-size: 32px; }
+.team-list > :not(:first-child) .tname { font-size: clamp(22px, 2vw, 28px); }
+@media (max-width: 560px) { .team-list > * { grid-template-columns: minmax(0, 1fr) !important; } }
+.fmq { border-block-width: 2px; }

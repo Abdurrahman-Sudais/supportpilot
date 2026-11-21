@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import site from './content.js';
+import {Count, Cycle, Marquee, Stats, Words} from './Flow.jsx';
 import {articles, tickets} from './data.js';
 import {answer, recurring} from './engine.js';
 import {ACROSS, SERVICES, STAGES, WHY} from './aws.js';
@@ -63,13 +64,18 @@ export function Chat({compact = false, threshold = 0.45, kb = articles}) {
   );
 }
 
+const CYCLE = ["B2B SaaS companies", "ecommerce businesses", "subscription services"];
+const MQ = ["B2B SaaS", "Ecommerce", "Subscription services", "Approved knowledge", "Cited answers", "Confidence thresholds", "Human escalation", "Ticket routing", "Summaries", "Recurring issues", "Support analytics", "Agent seats"];
+const STATS = [[9, "approved help articles"], [12, "sample tickets triaged"], [4, "teams tickets can be routed to"], [100, "of replies cite an approved source", "", "%"]];
+
 function Hero() {
   return (
     <section className="hero">
       <div className="hero-copy">
         <p className="hello" data-r><span className="wave" aria-hidden="true">👋</span> Customer support, grounded in your knowledge</p>
-        <h1 data-r>Resolve routine questions. <span className="u">Empower</span> support teams.</h1>
+        <h1><Words>Resolve routine questions. <span className="u">Empower</span> support teams.</Words></h1>
         <p className="lede" data-r style={{'--d': '150ms'}}>SupportPilot is a proposed AI support platform that answers routine questions from your approved help content — always with the source — sorts and routes every ticket, and hands anything uncertain to a person with a summary.</p>
+        <p className="fcy" data-r style={{'--d': '200ms'}}><Cycle lead="Built for" items={CYCLE} /></p>
         <div className="cta" data-r style={{'--d': '230ms'}}><a className="btn" href="#demo" data-magnetic data-cursor="hi!">Request a demo</a><a className="btn ghost" href="/app">Open the console</a></div>
       </div>
       <div className="hero-chat" id="try" data-r data-tilt><Chat /></div>
@@ -183,8 +189,7 @@ function Technology() {
 }
 
 function Team() {
-  const p = site.team[0];
-  return <section className="sec" id="team" aria-labelledby="team-title"><div className="team" data-r><span className="av" aria-hidden="true">{p.initials}</span><div><p className="eyebrow">Founder</p><h2 id="team-title">{p.name}</h2><p>{p.bio}</p><ul className="tags">{p.focus.map((f) => <li key={f}>{f}</li>)}</ul></div></div></section>;
+  return <section className="sec" id="team" aria-labelledby="team-title"><div className="team-head"><p className="eyebrow">Founding team</p><h2 id="team-title">The people building {site.name}.</h2></div><div className="team-list">{site.team.map((p, i) => (<div key={p.name} style={{'--d': `${i * 90}ms`}} className="team" data-r><span className="av" aria-hidden="true">{p.initials}</span><div><p className="eyebrow">{p.role}</p><h3 className="tname">{p.name}</h3><p>{p.bio}</p><ul className="tags">{p.focus.map((f) => <li key={f}>{f}</li>)}</ul></div></div>))}</div></section>;
 }
 
 function Demo() {
@@ -220,7 +225,7 @@ function Footer() {
   );
 }
 
-function Home() { return (<><Hero /><Features /><Grounded /><Escalation /><Recurring /><Who /><Pricing /><Technology /><Team /><Demo /><Faq /><Contact /></>); }
+function Home() { return (<><Hero /><Marquee items={MQ} label="Who and what it is built for" /><Stats items={STATS} /><Features /><Grounded /><Escalation /><Recurring /><Who /><Pricing /><Technology /><Team /><Demo /><Faq /><Contact /></>); }
 
 const LEGAL = {
   privacy: ['Privacy notice', [['This website', 'SupportPilot is a proposed product. This website and the support console run in your browser on fictional data.'], ['Chat preview and console', 'Questions you type are answered in your browser and never sent anywhere. The console keeps its changes in local storage (key supportpilot-console-v1).'], ['Forms', `Until a form service is connected, the demo and contact forms open a pre-filled email to ${site.email}; nothing is sent until you send it.`], ['Cookies & analytics', 'None.']]],

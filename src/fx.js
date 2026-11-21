@@ -9,7 +9,8 @@ export function startFx(opts = {}) {
   const fine = typeof matchMedia === 'function' && matchMedia('(pointer: fine)').matches;
   const root = document.documentElement;
   if (reduced || typeof IntersectionObserver === 'undefined') { root.classList.add(`${o.prefix}-static`); return; }
-  root.classList.add(`${o.prefix}-js`);
+  root.classList.add(`${o.prefix}-js`, 'fx-flow');
+  autoFlow(document.getElementById('main'));
 
   // Reveal: [data-r] gains .in when it enters the viewport; children can stagger with --i.
   const els = [...document.querySelectorAll('[data-r]')];
@@ -66,3 +67,44 @@ export function startFx(opts = {}) {
 
 /** Run a state change inside a View Transition where supported. */
 export const vt = (fn) => (typeof document !== 'undefined' && document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches ? document.startViewTransition(fn) : fn());
+
+// Flow: the WearInterval-style scroll choreography. Headings, their eyebrows and intros, and the items of every
+// card grid fade, rise and sharpen into place one after another as they enter the viewport. Only data attributes
+// and a CSS variable are touched (never classes or text), so React's hydration and later renders are unaffected.
+function autoFlow(main) {
+  if (!main) return;
+  const SKIP = 'header, footer, form, nav, [role="tablist"], [aria-hidden="true"], svg, table, .fm, [data-noflow]';
+  const ok = (el) => el && !el.hasAttribute('data-r') && !el.closest('[data-r]') && !el.closest(SKIP) && !el.hasAttribute('data-fx');
+  const targets = [];
+  const add = (el, d) => { if (ok(el)) { el.setAttribute('data-fx', 'wait'); el.style.setProperty('--fx-d', `${d}ms`); targets.push(el); } };
+  // 1. Section headings with the eyebrow just above them and the paragraphs just below.
+  main.querySelectorAll('section h2').forEach((h) => {
+    if (h.closest('#main > section:first-child') && !h.closest('.sec, [id]')) return;
+    const prev = h.previousElementSibling; let d = 0;
+    if (prev && prev.tagName !== 'H2' && prev.textContent.trim().length < 80 && !prev.querySelector('h2')) { add(prev, d); d += 80; }
+    add(h, d); d += 110;
+    let n = h.nextElementSibling; let k = 0;
+    while (n && k < 3 && ['P', 'PRE', 'UL', 'OL', 'DL'].includes(n.tagName)) { add(n, d); d += 90; n = n.nextElementSibling; k += 1; }
+  });
+  // 2. The items of card grids and wrapping rows, staggered left to right.
+  main.querySelectorAll('section *').forEach((box) => {
+    if (box.closest(SKIP) || box.closest('[data-r]') || box.children.length < 2 || box.children.length > 16) return;
+    const cs = getComputedStyle(box);
+    const isGrid = cs.display === 'grid' || cs.display === 'inline-grid' || (cs.display === 'flex' && cs.flexWrap === 'wrap');
+    if (!isGrid) return;
+    const kids = [...box.children].filter((c) => !['BUTTON', 'A', 'INPUT', 'LABEL', 'SELECT', 'OPTION', 'SPAN', 'B', 'I', 'EM', 'SMALL'].includes(c.tagName));
+    if (kids.length < 2 || kids.some((c) => c.hasAttribute('data-r') || c.querySelector('[data-r]'))) return;
+    if (kids.some((c) => c.querySelector('section'))) return;
+    kids.forEach((c, i) => add(c, (i % 6) * 85));
+  });
+  if (!targets.length) return;
+  const settle = (el) => setTimeout(() => el.setAttribute('data-fx', 'done'), 1400 + (parseFloat(el.style.getPropertyValue('--fx-d')) || 0));
+  const show = (el) => { if (el.getAttribute('data-fx') === 'wait') { el.setAttribute('data-fx', 'in'); settle(el); } };
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { show(e.target); io.unobserve(e.target); } }), {rootMargin: '0px 0px -6% 0px', threshold: 0.06});
+  targets.forEach((el) => io.observe(el));
+  // Fast scrolling or anchor jumps can skip an intersection: reveal anything already above the viewport bottom.
+  let raf = 0;
+  const sweep = () => { raf = 0; targets.forEach((el) => { if (el.getAttribute('data-fx') === 'wait' && el.getBoundingClientRect().top < innerHeight) { show(el); io.unobserve(el); } }); };
+  addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(sweep); }, {passive: true});
+  setTimeout(sweep, 350);
+}
