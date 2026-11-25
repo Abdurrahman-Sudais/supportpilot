@@ -53,5 +53,5 @@ test('replies must cite a source; only managers approve knowledge or change the 
 
 test('founder and contact', () => {
   assert.equal(site.team[0].name, 'Victor Adebayo');
-  assert.equal(site.email, 'victor@supportpilot.space');
+  assert.equal(site.email, 'victor@supportpilot.top');
 });

@@ -4,7 +4,7 @@
 
 SupportPilot is a proposed AI customer service platform for B2B SaaS companies, ecommerce businesses and subscription service providers. It would retrieve answers from approved knowledge sources with references, categorise, summarise and route inquiries, and escalate to human agents whenever an answer is uncertain.
 
-> SupportPilot is a proposed product. Features, integrations and AWS services are planned until implemented and verified. Pricing is illustrative, and the prototype uses fictional data. Founder: **Victor Adebayo**. Website: `supportpilot.space` · contact: `victor@supportpilot.space`.
+> SupportPilot is a proposed product. Features, integrations and AWS services are planned until implemented and verified. Pricing is illustrative, and the prototype uses fictional data. Founder: **Victor Adebayo**. Website: `supportpilot.top` · contact: `victor@supportpilot.top`.
 
 ## Design
 

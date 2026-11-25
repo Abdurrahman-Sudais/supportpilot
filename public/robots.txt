@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://supportpilot.space/sitemap.xml
+Sitemap: https://supportpilot.top/sitemap.xml

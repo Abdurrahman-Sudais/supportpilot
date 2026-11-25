@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {COMPANY_SIZES, ORG_TYPES, PROGRESS, TOPICS, USE_CASES, blankContact, blankPilot, contactPayload, hubspot, pilotPayload, validateContact, validatePilot} from '../src/forms.js';
 import {ACROSS, SERVICES, STAGES} from '../src/aws.js';
 
-const ctx = {pageUri: 'https://supportpilot.space/', pageName: 'SupportPilot'};
+const ctx = {pageUri: 'https://supportpilot.top/', pageName: 'SupportPilot'};
 
 test('pilot request needs company size, organisation type and use case', () => {
   const f = {...blankPilot(), name: 'Ada Obi', email: 'ada@example.com', company: 'Obi & Co', consent: true};
